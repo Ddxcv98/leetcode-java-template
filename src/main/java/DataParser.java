@@ -32,15 +32,19 @@ public class DataParser {
         this.lines = lines;
     }
 
+    private String getLine() {
+        return lines[line++];
+    }
+
     private Stream<MatchResult> getArrayStream() {
         return arrayPattern
-            .matcher(readString())
+            .matcher(getLine())
             .results();
     }
 
     private Stream<Stream<MatchResult>> getMatrixStream() {
         return matrixPattern
-            .matcher(readString())
+            .matcher(getLine())
             .results()
             .map(r -> arrayPattern.matcher(r.group()).results());
     }
@@ -50,19 +54,20 @@ public class DataParser {
     }
 
     public String readString() {
-        return lines[line++];
+        var line = getLine();
+        return line.substring(1, line.length() - 1);
     }
 
     public boolean readBoolean() {
-        return Boolean.parseBoolean(readString());
+        return Boolean.parseBoolean(getLine());
     }
 
     public int readInt() {
-        return Integer.parseInt(readString());
+        return Integer.parseInt(getLine());
     }
 
     public double readDouble() {
-        return Double.parseDouble(readString());
+        return Double.parseDouble(getLine());
     }
 
     public String[] readStringArray() {
